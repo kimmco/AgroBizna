@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "856632917362",
+    "project_id": "agrobizna-51a0c",
+    "storage_bucket": "agrobizna-51a0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856632917362:android:f61fe86fec09e2cc0f71eb",
+        "android_client_info": {
+          "package_name": "com.cokimutai.agrobizna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "856632917362-1vl9m8ub8l7dn6e9pu6sr70lck618ehi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cokimutai.agrobizna",
+            "certificate_hash": "86707ea089943f987d56b979ca74a238c4ea88ef"
+          }
+        },
+        {
+          "client_id": "856632917362-biicpuvb60nd0k2gpg67b5l47t5i11f9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc_Zr5MW5I-F66SnVGfPhE8Km_wRsGhnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "856632917362-9stku40r799gmpih4skcc6uidbrulleb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

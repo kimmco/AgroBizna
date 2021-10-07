@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tea_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.tea.TeaFragment"
+    >
+
+    <ImageView
+        android:id="@+id/tea_pluck_img"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_pipo_pluck"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/tea_spinner"
+        style="@style/spinnerTheme"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_tipping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="Tipping?"
+        android:textOff="Light"
+        android:textOn="Light"
+        android:textColor="#ffffff"
+        android:textSize="21sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/measure_edtx"
+        app:layout_constraintTop_toBottomOf="@+id/measure_edtx" />
+
+    <EditText
+        android:id="@+id/measure_edtx"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="false"
+        android:fontFamily="sans-serif"
+        android:hint="Enter Measure in points"
+        android:inputType="textShortMessage|textMultiLine|textCapSentences"
+        android:textColorHint="#ffffff"
+        android:textCursorDrawable="@null"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/tea_spinner"
+        app:layout_constraintStart_toStartOf="@+id/tea_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/tea_spinner" />
+
+    <EditText
+        android:id="@+id/cost_edtx"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#FFFFFF"
+        android:focusable="false"
+        android:fontFamily="sans-serif"
+        android:hint="Enter Money Cost"
+        android:inputType="numberSigned"
+        android:textColorHint="#FFFFFF"
+        android:textSize="20sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/measure_edtx"
+        app:layout_constraintStart_toStartOf="@+id/measure_edtx"
+        app:layout_constraintTop_toBottomOf="@+id/switch_tipping" />
+
+    <EditText
+        android:id="@+id/others_cost_edtx"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#FFFFFF"
+        android:focusable="false"
+        android:fontFamily="sans-serif"
+        android:hint="Total Cost"
+        android:inputType="number"
+        android:textColorHint="#FFFFFF"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/cost_edtx"
+        app:layout_constraintStart_toStartOf="@+id/cost_edtx"
+        app:layout_constraintTop_toBottomOf="@+id/cost_edtx" />
+
+    <Button
+        android:id="@+id/save_pluck_btn"
+        android:layout_width="296dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:text="Save"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/cost_edtx"
+        app:layout_constraintStart_toStartOf="@+id/cost_edtx"
+        app:layout_constraintTop_toBottomOf="@+id/others_cost_edtx" />
+
+
+    <TextView
+        android:id="@+id/titleTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/save_pluck_btn"
+        app:layout_constraintStart_toStartOf="@+id/save_pluck_btn"
+        app:layout_constraintTop_toBottomOf="@+id/save_pluck_btn" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/plucking_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="cost_edtx,save_pluck_btn,measure_edtx"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

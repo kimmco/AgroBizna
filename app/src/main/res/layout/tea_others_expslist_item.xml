@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<androidx.cardview.widget.CardView
+    android:id="@+id/other_tea_exps_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/list_hse_color"
+    app:contentPaddingBottom="8dp">
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    style="@style/ShapeAppearance.AgroBizna.LargeComponent">
+
+    <TextView
+        android:id="@+id/other_tea_date_holder"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Oct 4, 2021"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/other_tea_details_holder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="This text was written in Hispanics"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        android:layout_marginTop="8dp"
+        android:padding="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/other_tea_cost_holder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/other_tea_date_holder" />
+
+    <TextView
+        android:id="@+id/other_tea_unit_holder"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+        android:text="0.5 points"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tea_date_holder"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/other_tea_cost_holder"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="KSHs.55"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        app:layout_constraintEnd_toEndOf="@+id/other_tea_unit_holder"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/other_tea_unit_holder"
+        app:layout_constraintTop_toBottomOf="@+id/other_tea_unit_holder" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+

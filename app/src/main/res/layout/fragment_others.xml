@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.others.OthersFragment">
+
+    <EditText
+        android:id="@+id/others_measure_edtx"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:hint="Describe e.g bought a plot"
+        android:fontFamily="sans-serif"
+        android:textSize="20sp"
+        android:clickable="true"
+        android:focusable="false"
+        android:enabled="true"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <EditText
+        android:id="@+id/others_expenses_cost_edtx"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:focusable="false"
+        android:fontFamily="sans-serif"
+        android:hint="Total Cost"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/others_measure_edtx"
+        app:layout_constraintStart_toStartOf="@+id/others_measure_edtx"
+        app:layout_constraintTop_toBottomOf="@+id/others_measure_edtx" />
+
+    <Button
+        android:id="@+id/save_others_expns_btn"
+        android:layout_width="296dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="76dp"
+        android:fontFamily="sans-serif"
+        android:text="Save"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/others_expenses_cost_edtx"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/others_expenses_cost_edtx"
+        app:layout_constraintTop_toTopOf="@+id/others_expenses_cost_edtx" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

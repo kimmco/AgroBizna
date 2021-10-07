@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<androidx.cardview.widget.CardView
+    android:id="@+id/pluck_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/list_hse_color"
+    app:contentPaddingBottom="8dp">
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    style="@style/ShapeAppearance.AgroBizna.LargeComponent">
+
+    <TextView
+        android:id="@+id/tea_date_holder"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Oct 4, 2021 15:25:52"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tea_weight_holder"
+        android:layout_width="153dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+        android:text="55kg"
+        android:textSize="20sp"
+        app:fontFamily="@font/monob"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tea_date_holder"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+
