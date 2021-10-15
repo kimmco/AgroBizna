@@ -12,6 +12,9 @@ import com.google.firebase.database.*
 class AdminTeaRecords : AppCompatActivity() {
 
 
+
+
+
    private lateinit var databaseRef : DatabaseReference
    private lateinit var teaRecyclerView: RecyclerView
    private lateinit var teaArrayList : ArrayList<FarmDetails>

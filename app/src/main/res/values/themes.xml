@@ -17,9 +17,13 @@
       <!-- Status bar color. -->
       <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
       <!-- Customize your theme here. -->
-      <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AgroBizna.SmallComponent</item>
-      <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AgroBizna.MediumComponent</item>
-      <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AgroBizna.LargeComponent</item>
+      <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AgroBizna.SmallComponent
+      </item>
+      <item name="shapeAppearanceMediumComponent">
+          @style/ShapeAppearance.AgroBizna.MediumComponent
+      </item>
+      <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AgroBizna.LargeComponent
+      </item>
 
   </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -55,4 +59,10 @@
     <style name="spinnerTheme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/bg_spinner</item>
     </style>
+    <style name="Theme.AgroBizna.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.AgroBizna.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.AgroBizna.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

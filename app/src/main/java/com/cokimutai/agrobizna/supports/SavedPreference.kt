@@ -8,12 +8,18 @@ object SavedPreference {
 
     const val EMAIL= "email"
     const val USERNAME="username"
+    const val TIPPED_AMOUNT="tippingAddedUp"
+    const val PLUCKED_AMOUNT="pluckingAddedUp"
+    const val TOTAL_RECEIVEDED_AMOUNT="allExpensesCumulated"
+    const val RECENT_RECEIVEDED_AMOUNT="teaMoneyJustReceived"
+    const val TEA_EXPENSES_TOTAL="receivedAmntCumulated"
+    const val TEA_RECENT_PLUCKED="recentWeightPlucked"
 
     private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
 
-    private fun  editor(context: Context, const:String, string: String){
+    private fun  editor(context: Context?, const:String, string: String){
         getSharedPreference(
             context
         )?.edit()?.putString(const,string)?.apply()
@@ -22,6 +28,14 @@ object SavedPreference {
     fun getEmail(context: Context)= getSharedPreference(
         context
     )?.getString(EMAIL,"")
+
+    fun getRecentReceivedAmount(context: Context)= getSharedPreference(
+            context
+    )?.getString(  RECENT_RECEIVEDED_AMOUNT,"0")
+
+    fun getTotalReceivedAmount(context: Context)= getSharedPreference(
+            context
+    )?.getString(  TOTAL_RECEIVEDED_AMOUNT,"0")
 
     fun setEmail(context: Context, email: String){
         editor(
@@ -38,9 +52,63 @@ object SavedPreference {
             username
         )
     }
+    fun setTipping(context: Context, weight:String){
+        editor(
+                context,
+                TIPPED_AMOUNT,
+                weight
+        )
+    }
+    fun setPlucking(context: Context?, weight:String){
+        editor(
+                context,
+                PLUCKED_AMOUNT,
+                weight
+        )
+    }
+
+    fun setRecentMoney(context: Context, amount:String){
+        editor(
+                context,
+                RECENT_RECEIVEDED_AMOUNT,
+                amount
+        )
+    }
+
+    fun setTotalMoney(context: Context, amount:String){
+        editor(
+                context,
+                TOTAL_RECEIVEDED_AMOUNT,
+                amount
+        )
+    }
+    fun setTeaExpnsTotal(context: Context, weight:String){
+        editor(
+                context,
+                TEA_EXPENSES_TOTAL,
+                weight
+        )
+    }
+
+    fun setRecentPluckedTeaWeight(context: Context, weight:String){
+        editor(
+                context,
+                TEA_RECENT_PLUCKED,
+                weight
+        )
+    }
 
     fun getUsername(context: Context) = getSharedPreference(
         context
     )?.getString(USERNAME,"")
+
+    fun getPluckedTotal(context: Context) = getSharedPreference(
+            context
+    )?.getString(PLUCKED_AMOUNT, "0.0f")
+
+    fun getRecentTeaWeight(context: Context) = getSharedPreference(
+            context
+    )?.getString(TEA_RECENT_PLUCKED, "0.0f")
+
 
 }

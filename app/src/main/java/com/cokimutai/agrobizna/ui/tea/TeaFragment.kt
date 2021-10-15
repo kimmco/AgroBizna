@@ -16,13 +16,23 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.cokimutai.agrobizna.R
 import com.cokimutai.agrobizna.R.*
+import com.cokimutai.agrobizna.database.FirebaseUtil
 import com.cokimutai.agrobizna.supports.FarmDetails
+import com.cokimutai.agrobizna.supports.FarmDetailsCumulatives
+import com.cokimutai.agrobizna.supports.ForegroundWorker
+import com.cokimutai.agrobizna.supports.SavedPreference
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_tea.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -287,14 +297,6 @@ import kotlin.collections.HashMap
          return check
      }
 
-     fun validateWeeding() : Boolean{
-         var check = true
-         if (!hasText(measure_edtx)) check = false
-         if (!hasText(cost_edtx)) check = false
-        // if (!hasText(others_cost_edtx)) check = false
-         return check
-     }
-
      fun saveTeaPluckingToDb(){
          if (hasText(measure_edtx)){
              val toast = Toast.makeText(requireContext(),
@@ -317,6 +319,7 @@ import kotlin.collections.HashMap
              if (pluckType.equals(true)) {
                  farmDetailsMap.put(farmDetails.tippingWeight!!, capturedTeaWeight)
                  farmDetailsMap.put("date", sdf)
+                 cummulateTipping(capturedTeaWeight)
              } else {
                  farmDetailsMap.put("pluckingWeight", capturedTeaWeight)
                  farmDetailsMap.put("date", sdf)
@@ -327,9 +330,23 @@ import kotlin.collections.HashMap
                      ?.addOnCompleteListener(object : OnCompleteListener<Void> {
                          override fun onComplete(task: Task<Void>) {
                              if (task.isSuccessful) {
+                                 SavedPreference.setRecentPluckedTeaWeight(
+                                         requireContext(), capturedTeaWeight)
                                  measure_edtx.setText(" ")
                                  Toast.makeText(context, "Kilos submitted successfully!",
                                          Toast.LENGTH_SHORT).show()
+                              //   getTheSavedTotals()
+                                 WorkManager.getInstance(requireActivity())
+                                     .beginUniqueWork("ForegroundWorker", ExistingWorkPolicy.APPEND_OR_REPLACE,
+                                         OneTimeWorkRequest.from(ForegroundWorker::class.java)).enqueue().state
+                                     .observe(requireActivity()) { state ->
+                                         Log.d("CORNE", "ForegroundWorker: $state")
+                                     }
+                              /*   val fetchedSharedPrefPluckedTotal = SavedPreference
+                                         .getPluckedTotal(requireContext()) */
+
+                                 // updatePluckTotal(fetchedSharedPrefPluckedTotal, capturedTeaWeight)
+
 
                              } else {
                                  Toast.makeText(context,
@@ -340,6 +357,74 @@ import kotlin.collections.HashMap
                      })
          }
      }
+
+     private fun updatePluckTotal(fetchedPluckedTotal: String?, capturedTeaWeight: String) {
+         val floatFetched : Float? = fetchedPluckedTotal?.toFloat()
+         val floatCaptured : Float = capturedTeaWeight.toFloat()
+         val newPluckTotal = (floatFetched?.plus(floatCaptured))
+                // (floatFetched!! + floatCaptured)
+
+                 //(floatFetched?.plus(floatCaptured!!))
+
+         val teaDbRef = mFirebaseDatabase?.reference?.child("totals")
+         val farmDetailsCumulatives = FarmDetailsCumulatives()
+
+         var newPluckTotalMap : HashMap<String, Any> = HashMap()
+         newPluckTotalMap.put("MlememTYeMBBeTotals/pluckngAmntCumulative", newPluckTotal.toString())
+
+         teaDbRef?.updateChildren(newPluckTotalMap)
+                 ?.addOnCompleteListener(object : OnCompleteListener<Void> {
+                     override fun onComplete(task: Task<Void>) {
+                         if (task.isSuccessful) {
+                           //  measure_edtx.setText(" ")
+                             Toast.makeText(context, "Weight Totals submitted successfully!",
+                                     Toast.LENGTH_SHORT).show()
+
+                         } else {
+                             Toast.makeText(context,
+                                     "Failed to Submit!, try again \u2661 ",
+                                     Toast.LENGTH_SHORT).show()
+                         }
+                     }
+                 })
+     }
+
+     private fun getTheSavedTotals(){
+         FirebaseDatabase.getInstance().getReference("items")
+                 .addValueEventListener(object : ValueEventListener {
+
+                     override fun onDataChange(snapshot: DataSnapshot) {
+                         if (snapshot.exists()){
+                             for (snap in snapshot.children){
+                                 val selectedItem =
+                                         snap.getValue(FarmDetails::class.java)
+                                 val tippingAddedUp = selectedItem?.tippingAmntCumulative
+                                 val pluckingAddedUp = selectedItem?.pluckngAmntCumulative
+                                 val teaExpensesCumulated = selectedItem?.teaExpensesCumulative
+                                 val receivedAmntCumulated = selectedItem?.receivedAmntCumulative
+
+                                 Log.d("AMT", pluckingAddedUp.toString())
+
+                             //     SavedPreference.setTipping(requireContext(), tippingAddedUp!!)
+                                  SavedPreference.setPlucking(requireContext(), pluckingAddedUp!!)
+                              //    SavedPreference.setTeaExpnsTotal(requireContext(), teaExpensesCumulated!!)
+                               //   SavedPreference.setTotalMoney(requireContext(), receivedAmntCumulated!!)
+                             }
+                         }
+                     }
+
+                     override fun onCancelled(error: DatabaseError) {
+                         TODO("Not yet implemented")
+                     }
+                 })
+
+
+     }
+
+     private fun cummulateTipping(capturedTeaWeight: String) {
+
+     }
+
      fun saveTeaWeedingExpsToDb(){
          val capturedTeaWeedingSize = measure_edtx.text.toString()
          val capturedTeaWeedingCost = cost_edtx.text.toString()

@@ -2,6 +2,8 @@ package com.cokimutai.agrobizna.ui.others
 
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.InputType
 import androidx.fragment.app.Fragment
@@ -9,11 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.cokimutai.agrobizna.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_others.*
@@ -64,11 +68,13 @@ class OthersFragment : Fragment() {
         //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         //    sizeEdtxt.focusable = View.FOCUSABLE
         // }
-        if (title == "Others"){
-            if (words == "Total Cost"){
+
+        if (words == "Describe e.g bought a plot"){
+                sizeEdtxt.inputType = InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE
+            }else if (words == "Total Cost"){
                 sizeEdtxt.inputType = InputType.TYPE_CLASS_NUMBER
-            }
-        }
+          }
+
         val dialog = AlertDialog.Builder(mContext)
                 .setTitle(title)
                 .setMessage(words)
@@ -85,6 +91,22 @@ class OthersFragment : Fragment() {
         val capturedOthersExpDetails = others_measure_edtx.text.toString()
         val capturedOthersExpSize = others_expenses_cost_edtx.text.toString()
         val capturedOthersExpMap: HashMap<String, Any> = HashMap()
+
+        if ((others_measure_edtx.text.toString().isNullOrEmpty()) ||
+            (others_expenses_cost_edtx.text.toString().isNullOrEmpty()) ) {
+
+            val toast = Toast.makeText(requireContext(),
+                getString(R.string.empty_view_msg), Toast.LENGTH_LONG)
+            val view = toast.view
+            view?.background?.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN)
+            val txt = view?.findViewById<TextView>(android.R.id.message)
+            txt?.setTextColor(Color.WHITE)
+            toast.show()
+
+            Snackbar.make(requireView(),    getString(R.string.empty_view_msg), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+            return
+        }
 
 
         val uid = mAuth?.currentUser!!.uid

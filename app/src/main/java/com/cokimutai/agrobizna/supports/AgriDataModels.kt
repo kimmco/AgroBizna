@@ -10,6 +10,8 @@ data class FarmDetails (
      val  tippingWeight : String? = null,
      val  date : String? = null,
      val  weedingDate : String? = null,
+     val  dateReceivedAmnt : String? = null,
+     val  receivedAmnt : String? = null,
      val  cattleDate : String? = null,
      val  othersTeaExpnsDate : String? = null,
      val  genExpnsDate : String? = null,
@@ -22,5 +24,16 @@ data class FarmDetails (
      val  cattleExpensDescription : String? = null,
      val  cattleExpensCost : String? = null,
      val  othersGeneralExpsDescription : String? = null,
-     val  othersGeneralExpsCost : String? = null
+     val  othersGeneralExpsCost : String? = null,
+     val  receivedAmntCumulative : String? = null,
+     val  tippingAmntCumulative : String? = null,
+     val  pluckngAmntCumulative : String? = null,
+     val  teaExpensesCumulative : String? = null,
          ) : Parcelable
+@Parcelize
+data class FarmDetailsCumulatives (
+        val  receivedAmntCumulative : String? = null,
+        val  tippingAmntCumulative : String? = null,
+        val  pluckngAmntCumulative : String? = null,
+        val  teaExpensesCumulative : String? = null,
+          ) : Parcelable
