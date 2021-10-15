@@ -14,6 +14,7 @@ object SavedPreference {
     const val RECENT_RECEIVEDED_AMOUNT="teaMoneyJustReceived"
     const val TEA_EXPENSES_TOTAL="receivedAmntCumulated"
     const val TEA_RECENT_PLUCKED="recentWeightPlucked"
+    const val RECENT_PLUCKED_DATE="recentDatePlucked"
 
     private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -36,6 +37,10 @@ object SavedPreference {
     fun getTotalReceivedAmount(context: Context)= getSharedPreference(
             context
     )?.getString(  TOTAL_RECEIVEDED_AMOUNT,"0")
+
+    fun getLastDatePlucked(context: Context)= getSharedPreference(
+            context
+    )?.getString(  RECENT_PLUCKED_DATE,"30/02")
 
     fun setEmail(context: Context, email: String){
         editor(
@@ -95,6 +100,14 @@ object SavedPreference {
                 context,
                 TEA_RECENT_PLUCKED,
                 weight
+        )
+    }
+
+    fun setRecentPluckedTeaDate(context: Context, theDate:String){
+        editor(
+                context,
+                RECENT_PLUCKED_DATE,
+                theDate
         )
     }
 

@@ -24,9 +24,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.cokimutai.agrobizna.supports.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.DateFormat
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +50,16 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         firebaseAuth= FirebaseAuth.getInstance()
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
+   /*     WorkManager.getInstance(this)
+                .beginUniqueWork("AmountTotalWorker", ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.from(AmountTotalWorker::class.java)).enqueue().state
+                .observe(this) { state ->
+
+                }*/
+
+        month_count_kash.text = "KSHs. " + SavedPreference.getTotalReceivedAmount(this)
+
+        fab.setOnClickListener { view ->
             showUniversalMenu(this, "Money Received", "Money received/from any sales")
 
         }
@@ -102,8 +111,8 @@ class MainActivity : AppCompatActivity() {
 
         val sizeEdtxt: EditText = teaCostView.findViewById(R.id.size_picker) as EditText
          sDialog = AlertDialog.Builder(this)
-                .setTitle("Sure")
-                .setMessage("Are you sure the amount is correct?")
+                .setTitle("KSHs. " + value)
+                .setMessage("Are you sure this amount is correct?")
                // .setView(teaCostView)
                 .setPositiveButton(getString(R.string.ok_dialog_txt), DialogInterface.OnClickListener { dialog, which ->
 
@@ -134,57 +143,15 @@ class MainActivity : AppCompatActivity() {
                 .beginUniqueWork("AmountTotalWorker", ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.from(AmountTotalWorker::class.java)).enqueue().state
                 .observe(this) { state ->
-                    Log.d("MONY", "AmountTotalWorker: $state")
+
                 }
-    }
-
-    /*
-    fun addMoneyReceivedToDb(pesa: String){
-        farmDetailsMap.put(farmDetails.receivedAmnt!!, pesa)
-        farmDetailsMap.put(farmDetails.dateReceivedAmnt!!, sdf)
-
-        amountRecAccumulatorMap.put(farmDetails.receivedAmntCumulative!!, sdf)
-
-        teaDbRef?.push()?.updateChildren(farmDetailsMap)
-                ?.addOnCompleteListener(object : OnCompleteListener<Void> {
-                    override fun onComplete(task: Task<Void>) {
-                        if (task.isSuccessful) {
-                         //   measure_edtx.setText(" ")
-                            Toast.makeText(this@MainActivity, "Amount savedd successfully!",
-                                    Toast.LENGTH_SHORT).show()
-
-                        } else {
-                            Toast.makeText(this@MainActivity,
-                                    "Failed to Submit!, try again \u2661 ",
-                                    Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                })
-
-      /*  teaDbRef?.updateChildren(amountRecAccumulatorMap)
-                ?.addOnCompleteListener(object : OnCompleteListener<Void> {
-                    override fun onComplete(task: Task<Void>) {
-                        if (task.isSuccessful) {
-
-                        } else {
-                            Toast.makeText(this@MainActivity,
-                                    "Didn't sum up Totals, please report",
-                                    Toast.LENGTH_LONG).show()
-                        }
-                    }
-                })
-
-        */
 
     }
 
-
-    override fun onOkClick() {
-
-        addMoneyReceivedToDb(" 22")
-        Log.d("TAG", "Tag")
+    override fun onResume() {
+        super.onResume()
+        month_count_kash.text = "KSHs. " + SavedPreference.getTotalReceivedAmount(this)
     }
-    */
 
     companion object {
         val farmDetails: FarmDetails = FarmDetails()

@@ -34,7 +34,7 @@
                 android:layout_height="80dp"
                 android:layout_marginTop="76dp"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_apartment"
+                android:src="@drawable/ic_double_tea"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -89,6 +89,20 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.jediburrell.customfab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:fabColor="@color/purple_700"
+            app:fabIcon="@drawable/ic_coins_s"
+            app:fabShape="@drawable/fab_shape"
+            app:fabType="custom"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pesa_view"
+            app:layout_constraintVertical_bias="0.931" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="0dp"
@@ -120,18 +134,9 @@
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/container"
-            app:layout_constraintVertical_bias="0.931"
-            app:srcCompat="@android:drawable/ic_dialog_email"
-            app:hoveredFocusedTranslationZ="200dp"
-            app:useCompatPadding="true" />
+<!--        app:srcCompat="@android:drawable/ic_coins_l"-->
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

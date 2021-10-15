@@ -34,10 +34,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_tea.*
+import java.lang.Math.random
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 
 import kotlin.collections.HashMap
+import kotlin.random.Random
 
  class TeaFragment : Fragment() {
 
@@ -298,6 +302,7 @@ import kotlin.collections.HashMap
      }
 
      fun saveTeaPluckingToDb(){
+         val random = (0..1000).random()
          if (hasText(measure_edtx)){
              val toast = Toast.makeText(requireContext(),
                      getString(string.empty_view_msg), Toast.LENGTH_LONG)
@@ -308,13 +313,33 @@ import kotlin.collections.HashMap
              toast.show()
              return
          }else {
+
              val farmDetails: FarmDetails = FarmDetails()
              val capturedTeaWeight = measure_edtx.text.toString()
              val farmDetailsMap: HashMap<String, Any> = HashMap()
 
              val currentTime = System.currentTimeMillis()
-             val sdf = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-                     DateFormat.MEDIUM).format(currentTime)
+             val sdf = DateFormat.getDateInstance(DateFormat.MEDIUM)
+                     .format(currentTime)
+             val lastDateFrmShared = SavedPreference.getLastDatePlucked(requireContext())
+             val firstDateofMonth = LocalDate.now().withDayOfMonth(1)// SavedPreference.getLastDatePlucked()
+             val format = Calendar.getInstance()
+            val leo =  format.time  // = Date()
+            // val dateFrmt = format.parse(currentTime.toString())
+             
+             // val dayOfTheWeek =
+
+             Log.d("DAY", lastDateFrmShared.toString())
+             Log.d("DAY", firstDateofMonth.toString())
+             Log.d("DAY", leo.toString())
+
+         /*
+             if (sdf == firstDateofMonth.toString() ){
+                 if (lastDateFrmShared != sdf ){
+                     SavedPreference.setPlucking(requireContext(), "0")
+                     val savePluckNode = "MleYeMBBeTotals" + random
+                 }
+             } */
 
              if (pluckType.equals(true)) {
                  farmDetailsMap.put(farmDetails.tippingWeight!!, capturedTeaWeight)
@@ -332,7 +357,12 @@ import kotlin.collections.HashMap
                              if (task.isSuccessful) {
                                  SavedPreference.setRecentPluckedTeaWeight(
                                          requireContext(), capturedTeaWeight)
+
+
+                                 SavedPreference.setRecentPluckedTeaDate(
+                                         requireContext(), capturedTeaWeight)
                                  measure_edtx.setText(" ")
+
                                  Toast.makeText(context, "Kilos submitted successfully!",
                                          Toast.LENGTH_SHORT).show()
                               //   getTheSavedTotals()

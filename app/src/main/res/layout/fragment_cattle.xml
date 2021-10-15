@@ -5,12 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <ImageView
+        android:id="@+id/tea_pluck_img"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_crazy_cow"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/cattle_expns_descrp_edtx"
         android:layout_width="296dp"
         android:layout_height="wrap_content"
         android:hint="Describe the expense"
-        android:fontFamily="sans-serif"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:fontFamily="@font/mono"
         android:textSize="20sp"
         android:clickable="true"
         android:focusable="false"
@@ -27,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:focusable="false"
-        android:fontFamily="sans-serif"
+        android:fontFamily="@font/mono"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Total Cost"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/cattle_expns_descrp_edtx"
@@ -39,8 +56,8 @@
         android:layout_width="296dp"
         android:layout_height="60dp"
         android:layout_marginTop="76dp"
-        android:fontFamily="sans-serif"
         android:text="Save"
+        android:fontFamily="@font/mono"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/catttle_expens_cost_edtx"
         app:layout_constraintHorizontal_bias="0.0"
