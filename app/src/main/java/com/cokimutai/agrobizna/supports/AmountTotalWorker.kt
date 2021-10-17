@@ -20,6 +20,7 @@ class AmountTotalWorker(context: Context, parameters: WorkerParameters) :
        // setForeground(createForegroundInfo())
 
         return@withContext runCatching {
+
             runTask()
 
             Result.success()
@@ -34,7 +35,6 @@ class AmountTotalWorker(context: Context, parameters: WorkerParameters) :
         getTheSavedTotals()
         val moneyReceived = SavedPreference.getRecentReceivedAmount(myContext)
         updateMoneyRecvdTotal(moneyReceived!!)
-
 
     }
 

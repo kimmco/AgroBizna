@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.DateFormat
 
 
 class ForegroundWorker(context: Context, parameters: WorkerParameters) :
@@ -31,10 +32,9 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
     val myContext = context
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        setForeground(createForegroundInfo())
 
         return@withContext runCatching {
-             runTask()
+            runTask()
 
             Result.success()
         }.getOrElse {
@@ -43,47 +43,13 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(id: String, channelName: String) {
-        notificationManager.createNotificationChannel(
-            NotificationChannel(id, channelName, NotificationManager.IMPORTANCE_DEFAULT)
-        )
-    }
-
-    //Creates notifications for service
-    private fun createForegroundInfo(): ForegroundInfo {
-        val id = "1225"
-        val channelName = "Downloads Notification"
-        val title = "Downloading"
-        val cancel = "Cancel"
-        val body = "Long running task is running"
-
-        val intent = WorkManager.getInstance(applicationContext)
-            .createCancelPendingIntent(getId())
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel(id, channelName)
-        }
-
-        val notification = NotificationCompat.Builder(applicationContext, id)
-            .setContentTitle(title)
-            .setTicker(title)
-            .setContentText(body)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setOngoing(true)
-            .addAction(android.R.drawable.ic_delete, cancel, intent)
-            .build()
-
-        return ForegroundInfo(1, notification)
-    }
-
     private suspend fun runTask() {
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         val fetchedSharedPrefPluckedTotal = SavedPreference
                 .getPluckedTotal(myContext)
         val fetchedcapturedWeightTotal = SavedPreference
                 .getRecentTeaWeight(myContext)
-        getTheSavedTotals()
+       // getTheSavedTotals()
         updatePluckTotal(fetchedSharedPrefPluckedTotal, fetchedcapturedWeightTotal!!)
 
     }
@@ -131,8 +97,13 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
         val teaDbRef = mFirebaseDatabase?.reference?.child("totals")
         val farmDetailsCumulatives = FarmDetailsCumulatives()
 
-        var newPluckTotalMap : HashMap<String, Any> = HashMap()
-        newPluckTotalMap.put("MlememTYeMBBeTotals/pluckngAmntCumulative", newPluckTotal.toString())
+        val newPluckTotalMap : HashMap<String, Any> = HashMap()
+        //var saveNode = "MlememTYeMBBeTotals"
+
+        val savingPluckNode = SavedPreference.getPluckAccumNode(myContext)
+
+
+        newPluckTotalMap.put("$savingPluckNode/pluckngAmntCumulative", newPluckTotal.toString())
 
         teaDbRef?.updateChildren(newPluckTotalMap)
                 ?.addOnCompleteListener(object : OnCompleteListener<Void> {
@@ -141,6 +112,8 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
                             //  measure_edtx.setText(" ")
                             Toast.makeText(myContext, "Weight Totals submitted successfully!",
                                     Toast.LENGTH_SHORT).show()
+
+                            Log.d("NODE", savingPluckNode.toString())
 
                         } else {
                             Toast.makeText(myContext,

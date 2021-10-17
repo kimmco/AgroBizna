@@ -37,13 +37,14 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/ic_person_pin" />
+                android:src="@drawable/ic_double_tea" />
+<!--                android:src="@drawable/ic_person_pin" />-->
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Google Login"
+                android:text="Sign in To Use This App"
                 android:textAlignment="center"
                 android:textSize="40sp" />
 

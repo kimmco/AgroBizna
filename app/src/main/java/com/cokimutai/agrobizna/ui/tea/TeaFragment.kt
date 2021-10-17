@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,12 +23,10 @@ import androidx.work.WorkManager
 import com.cokimutai.agrobizna.R
 import com.cokimutai.agrobizna.R.*
 import com.cokimutai.agrobizna.database.FirebaseUtil
-import com.cokimutai.agrobizna.supports.FarmDetails
-import com.cokimutai.agrobizna.supports.FarmDetailsCumulatives
-import com.cokimutai.agrobizna.supports.ForegroundWorker
-import com.cokimutai.agrobizna.supports.SavedPreference
+import com.cokimutai.agrobizna.supports.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -67,6 +66,8 @@ import kotlin.random.Random
 
         mAuth = FirebaseAuth.getInstance()
         mFirebaseDatabase = FirebaseDatabase.getInstance()
+
+        resetMonth(view)
 
         val listItemsTxt = (resources.getStringArray(R.array.Tea_Products))
 
@@ -321,25 +322,6 @@ import kotlin.random.Random
              val currentTime = System.currentTimeMillis()
              val sdf = DateFormat.getDateInstance(DateFormat.MEDIUM)
                      .format(currentTime)
-             val lastDateFrmShared = SavedPreference.getLastDatePlucked(requireContext())
-             val firstDateofMonth = LocalDate.now().withDayOfMonth(1)// SavedPreference.getLastDatePlucked()
-             val format = Calendar.getInstance()
-            val leo =  format.time  // = Date()
-            // val dateFrmt = format.parse(currentTime.toString())
-             
-             // val dayOfTheWeek =
-
-             Log.d("DAY", lastDateFrmShared.toString())
-             Log.d("DAY", firstDateofMonth.toString())
-             Log.d("DAY", leo.toString())
-
-         /*
-             if (sdf == firstDateofMonth.toString() ){
-                 if (lastDateFrmShared != sdf ){
-                     SavedPreference.setPlucking(requireContext(), "0")
-                     val savePluckNode = "MleYeMBBeTotals" + random
-                 }
-             } */
 
              if (pluckType.equals(true)) {
                  farmDetailsMap.put(farmDetails.tippingWeight!!, capturedTeaWeight)
@@ -358,9 +340,10 @@ import kotlin.random.Random
                                  SavedPreference.setRecentPluckedTeaWeight(
                                          requireContext(), capturedTeaWeight)
 
-
                                  SavedPreference.setRecentPluckedTeaDate(
-                                         requireContext(), capturedTeaWeight)
+                                         requireContext(), sdf)
+
+                                 //todayDayOfMonth)
                                  measure_edtx.setText(" ")
 
                                  Toast.makeText(context, "Kilos submitted successfully!",
@@ -370,6 +353,7 @@ import kotlin.random.Random
                                      .beginUniqueWork("ForegroundWorker", ExistingWorkPolicy.APPEND_OR_REPLACE,
                                          OneTimeWorkRequest.from(ForegroundWorker::class.java)).enqueue().state
                                      .observe(requireActivity()) { state ->
+
                                          Log.d("CORNE", "ForegroundWorker: $state")
                                      }
                               /*   val fetchedSharedPrefPluckedTotal = SavedPreference
@@ -386,69 +370,6 @@ import kotlin.random.Random
                          }
                      })
          }
-     }
-
-     private fun updatePluckTotal(fetchedPluckedTotal: String?, capturedTeaWeight: String) {
-         val floatFetched : Float? = fetchedPluckedTotal?.toFloat()
-         val floatCaptured : Float = capturedTeaWeight.toFloat()
-         val newPluckTotal = (floatFetched?.plus(floatCaptured))
-                // (floatFetched!! + floatCaptured)
-
-                 //(floatFetched?.plus(floatCaptured!!))
-
-         val teaDbRef = mFirebaseDatabase?.reference?.child("totals")
-         val farmDetailsCumulatives = FarmDetailsCumulatives()
-
-         var newPluckTotalMap : HashMap<String, Any> = HashMap()
-         newPluckTotalMap.put("MlememTYeMBBeTotals/pluckngAmntCumulative", newPluckTotal.toString())
-
-         teaDbRef?.updateChildren(newPluckTotalMap)
-                 ?.addOnCompleteListener(object : OnCompleteListener<Void> {
-                     override fun onComplete(task: Task<Void>) {
-                         if (task.isSuccessful) {
-                           //  measure_edtx.setText(" ")
-                             Toast.makeText(context, "Weight Totals submitted successfully!",
-                                     Toast.LENGTH_SHORT).show()
-
-                         } else {
-                             Toast.makeText(context,
-                                     "Failed to Submit!, try again \u2661 ",
-                                     Toast.LENGTH_SHORT).show()
-                         }
-                     }
-                 })
-     }
-
-     private fun getTheSavedTotals(){
-         FirebaseDatabase.getInstance().getReference("items")
-                 .addValueEventListener(object : ValueEventListener {
-
-                     override fun onDataChange(snapshot: DataSnapshot) {
-                         if (snapshot.exists()){
-                             for (snap in snapshot.children){
-                                 val selectedItem =
-                                         snap.getValue(FarmDetails::class.java)
-                                 val tippingAddedUp = selectedItem?.tippingAmntCumulative
-                                 val pluckingAddedUp = selectedItem?.pluckngAmntCumulative
-                                 val teaExpensesCumulated = selectedItem?.teaExpensesCumulative
-                                 val receivedAmntCumulated = selectedItem?.receivedAmntCumulative
-
-                                 Log.d("AMT", pluckingAddedUp.toString())
-
-                             //     SavedPreference.setTipping(requireContext(), tippingAddedUp!!)
-                                  SavedPreference.setPlucking(requireContext(), pluckingAddedUp!!)
-                              //    SavedPreference.setTeaExpnsTotal(requireContext(), teaExpensesCumulated!!)
-                               //   SavedPreference.setTotalMoney(requireContext(), receivedAmntCumulated!!)
-                             }
-                         }
-                     }
-
-                     override fun onCancelled(error: DatabaseError) {
-                         TODO("Not yet implemented")
-                     }
-                 })
-
-
      }
 
      private fun cummulateTipping(capturedTeaWeight: String) {
@@ -544,6 +465,29 @@ import kotlin.random.Random
                          }
                      }
                  })
+     }
+
+     fun resetMonth(rootLayout: View) {
+         val random = (0..1000000).random()
+         val currentTime = System.currentTimeMillis()
+         val lastPluckedOn = SavedPreference.getLastDatePlucked(requireContext())
+         val sdf = DateFormat.getDateInstance(DateFormat.MEDIUM)
+             .format(currentTime)
+         val todayDayOfMonth = sdf.substring(4, 6)
+         if(todayDayOfMonth == "01"){
+              Snackbar.make(
+                // rootLayout.findViewById(R.id.tea_layout),
+                  requireActivity().findViewById(android.R.id.content),
+                 " For today, add all tea receipts if there are more than one before saving to database",
+                 10000).show()
+
+
+            SavedPreference.setPlucking(requireContext(), "0")
+             val savePluckNode = "MleYeMBBeTotals" + random
+             SavedPreference.setPluckingAccumNode(requireContext(), savePluckNode)
+
+         }
+
      }
 
      companion object {
