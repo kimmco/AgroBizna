@@ -1,26 +1,16 @@
 package com.cokimutai.agrobizna.supports
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.work.CoroutineWorker
-import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.cokimutai.agrobizna.R
-import com.cokimutai.agrobizna.ui.tea.TeaFragment
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.DateFormat
 
 
 class ForegroundWorker(context: Context, parameters: WorkerParameters) :
@@ -45,12 +35,17 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
     private suspend fun runTask() {
         mFirebaseDatabase = FirebaseDatabase.getInstance()
+
+        val fetchedSharedPrefTippedTotal = SavedPreference.getTippedTotal(myContext)
+        val fetchedcapturedTippingWeight = SavedPreference.getDayTippedWeight(myContext)
+
         val fetchedSharedPrefPluckedTotal = SavedPreference
                 .getPluckedTotal(myContext)
-        val fetchedcapturedWeightTotal = SavedPreference
+        val fetchedcapturedWeight = SavedPreference
                 .getRecentTeaWeight(myContext)
 
-        updatePluckTotal(fetchedSharedPrefPluckedTotal, fetchedcapturedWeightTotal!!)
+        updatePluckTotal(fetchedSharedPrefPluckedTotal, fetchedcapturedWeight!!,
+                fetchedSharedPrefTippedTotal, fetchedcapturedTippingWeight)
 
         getTheSavedTotals()
 
@@ -74,9 +69,10 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
                         pluckingAddedUp?.let { Log.d("SEE", it) }
 
-                         SavedPreference.setTipping(myContext, tippingAddedUp!!)
+                         //SavedPreference.setTipping(myContext, tippingAddedUp!!)
+                         tippingAddedUp?.let { SavedPreference.setTipping(myContext, it) }
                          pluckingAddedUp?.let { SavedPreference.setPlucking(myContext, it) }
-                         SavedPreference.setTeaExpnsTotal(myContext, teaExpensesCumulated!!)
+                         teaExpensesCumulated?.let { SavedPreference.setTeaExpnsTotal(myContext, it) }
                          receivedAmntCumulated?.let { SavedPreference.setTotalMoney(myContext, it) }
 
                     }
@@ -92,21 +88,31 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
     }
 
-    private fun updatePluckTotal(fetchedPluckedTotal: String?, capturedTeaWeight: String) {
-        val floatFetched : Float? = fetchedPluckedTotal?.toFloat()
-        val floatCaptured : Float = capturedTeaWeight.toFloat()
-        val newPluckTotal = (floatFetched?.plus(floatCaptured))
+    private fun updatePluckTotal(fetchedPluckedTotal: String?, capturedTeaWeight: String,
+                                 fetchedTippedTotal: String?, fetchedTippingWeight: String?) {
 
+        var newPluckTotal: Float? = 0.0f
+       // var savingPluckNode = SavedPreference.getPluckAccumNode(myContext)
+        if (fetchedTippingWeight == "") {
+            val floatFetched: Float? = fetchedPluckedTotal?.toFloat()
+            val floatCaptured: Float = capturedTeaWeight.toFloat()
+            newPluckTotal = (floatFetched?.plus(floatCaptured))
+            savingPluckNode = SavedPreference.getPluckAccumNode(myContext)!!+"/pluckngAmntCumulative"
+
+        } else if (capturedTeaWeight == "") {
+        savingPluckNode = SavedPreference.getTippingAccumNode(myContext)!! + "/tippingAmntCumulative"
+        val floatFetched: Float? = fetchedTippedTotal?.toFloat()
+        val floatCaptured: Float? = fetchedTippingWeight?.toFloat()
+        newPluckTotal = (floatFetched?.plus(floatCaptured!!))
+    }
         val teaDbRef = mFirebaseDatabase?.reference?.child("totals")
         val farmDetailsCumulatives = FarmDetailsCumulatives()
 
         val newPluckTotalMap : HashMap<String, Any> = HashMap()
         //var saveNode = "MlememTYeMBBeTotals"
 
-        val savingPluckNode = SavedPreference.getPluckAccumNode(myContext)
 
-
-        newPluckTotalMap.put("$savingPluckNode/pluckngAmntCumulative", newPluckTotal.toString())
+        newPluckTotalMap.put(savingPluckNode, newPluckTotal.toString())
 
         teaDbRef?.updateChildren(newPluckTotalMap)
                 ?.addOnCompleteListener(object : OnCompleteListener<Void> {
@@ -131,6 +137,7 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
     companion object {
         private lateinit var databaseRef : DatabaseReference
         private var mFirebaseDatabase: FirebaseDatabase? = null
+        private lateinit var savingPluckNode : String
     }
 
 }

@@ -9,13 +9,16 @@ object SavedPreference {
     const val EMAIL= "email"
     const val USERNAME="username"
     const val TIPPED_AMOUNT="tippingAddedUp"
+    const val TIPPED_DAY_WEIGHT="tippingDayWeight"
     const val PLUCKED_AMOUNT="pluckingAddedUp"
     const val TOTAL_RECEIVEDED_AMOUNT="allExpensesCumulated"
     const val RECENT_RECEIVEDED_AMOUNT="teaMoneyJustReceived"
     const val TEA_EXPENSES_TOTAL="receivedAmntCumulated"
     const val TEA_RECENT_PLUCKED="recentWeightPlucked"
     const val RECENT_PLUCKED_DATE="recentDatePlucked"
+    const val RECENT_TIPPED_DATE="recentDateTipped"
     const val PLUCKING_ACCUM_NODE="pluckAccuNode"
+    const val TIPPING_ACCUM_NODE="tipAccuNode"
 
     private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -43,6 +46,10 @@ object SavedPreference {
             context
     )?.getString(  RECENT_PLUCKED_DATE,"00")
 
+    fun getLastDateTipped(context: Context)= getSharedPreference(
+            context
+    )?.getString(  RECENT_TIPPED_DATE,"00")
+
     fun setEmail(context: Context, email: String){
         editor(
             context,
@@ -61,10 +68,20 @@ object SavedPreference {
     fun setTipping(context: Context, weight:String){
         editor(
                 context,
-                `TIPPED_AMOUNT`,
+                TIPPED_AMOUNT,
                 weight
         )
     }
+
+    fun setDayTippingWeight(context: Context, weight:String){
+        editor(
+                context,
+                TIPPED_DAY_WEIGHT,
+                weight
+        )
+    }
+
+
     fun setPlucking(context: Context?, weight:String){
         editor(
                 context,
@@ -112,6 +129,14 @@ object SavedPreference {
         )
     }
 
+    fun setRecentTippedTeaDate(context: Context, theDate:String){
+        editor(
+                context,
+                RECENT_TIPPED_DATE,
+                theDate
+        )
+    }
+
     fun setPluckingAccumNode(context: Context, theDate:String){
         editor(
             context,
@@ -120,9 +145,23 @@ object SavedPreference {
         )
     }
 
+    fun setTipingingAccumNode(context: Context, theDate:String){
+        editor(
+                context,
+                TIPPING_ACCUM_NODE,
+                theDate
+        )
+    }
+
+
+
     fun getPluckAccumNode(context: Context) = getSharedPreference(
         context
     )?.getString(PLUCKING_ACCUM_NODE,"MleYeMBBeTotals")
+
+    fun getTippingAccumNode(context: Context) = getSharedPreference(
+            context
+    )?.getString(TIPPING_ACCUM_NODE,"MleYeMTipTotals")
 
 
     fun getPluckedTotal(context: Context) = getSharedPreference(
@@ -138,6 +177,10 @@ object SavedPreference {
     fun getRecentTeaWeight(context: Context) = getSharedPreference(
             context
     )?.getString(TEA_RECENT_PLUCKED, "0.0f")
+
+    fun getDayTippedWeight(context: Context) = getSharedPreference(
+            context
+    )?.getString(TIPPED_DAY_WEIGHT, "0.0f")
 
 
 }

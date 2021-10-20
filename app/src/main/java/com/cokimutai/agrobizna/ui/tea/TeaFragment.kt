@@ -322,7 +322,7 @@ import kotlin.random.Random
                      .format(currentTime)
 
              if (pluckType.equals(true)) {
-                 farmDetailsMap.put(farmDetails.tippingWeight!!, capturedTeaWeight)
+                 farmDetailsMap.put("tippingWeight", capturedTeaWeight)
                  farmDetailsMap.put("date", sdf)
                  cummulateTipping(capturedTeaWeight)
              } else {
@@ -330,24 +330,42 @@ import kotlin.random.Random
                  farmDetailsMap.put("date", sdf)
              }
 
+
+             val lastPluckedDateOn = sdf.substring(4, 6)
+
              val teaDbRef = mFirebaseDatabase?.reference?.child(KEY_FARM_ITEM)
+
              teaDbRef?.push()?.updateChildren(farmDetailsMap)
                      ?.addOnCompleteListener(object : OnCompleteListener<Void> {
+
                          override fun onComplete(task: Task<Void>) {
                              if (task.isSuccessful) {
-                                 SavedPreference.setRecentPluckedTeaWeight(
-                                         requireContext(), capturedTeaWeight)
+                                 if(pluckType.equals(true)){
+                                     SavedPreference.setDayTippingWeight(
+                                             requireContext(), capturedTeaWeight)
 
-                                 val lastPluckedDateOn = sdf.substring(4, 6)
-                                 SavedPreference.setRecentPluckedTeaDate(
-                                         requireContext(), lastPluckedDateOn)
+                                     SavedPreference.setRecentPluckedTeaWeight(
+                                             requireContext(), "")
 
-                                 //todayDayOfMonth)
+                                     SavedPreference.setRecentPluckedTeaDate(
+                                             requireContext(), lastPluckedDateOn)
+
+                                 }else if ((pluckType.equals(false))){
+                                     SavedPreference.setDayTippingWeight(
+                                             requireContext(), "")
+
+                                     SavedPreference.setRecentPluckedTeaWeight(
+                                             requireContext(), capturedTeaWeight)
+
+                                     SavedPreference.setRecentTippedTeaDate(
+                                             requireContext(), lastPluckedDateOn)
+                                 }
+
                                  measure_edtx.setText(" ")
 
                                  Toast.makeText(context, "Kilos submitted successfully!",
                                          Toast.LENGTH_SHORT).show()
-                              //   getTheSavedTotals()
+
                                  WorkManager.getInstance(requireActivity())
                                      .beginUniqueWork("ForegroundWorker", ExistingWorkPolicy.APPEND_OR_REPLACE,
                                          OneTimeWorkRequest.from(ForegroundWorker::class.java)).enqueue().state
@@ -355,11 +373,6 @@ import kotlin.random.Random
 
                                          Log.d("CORNE", "ForegroundWorker: $state")
                                      }
-                              /*   val fetchedSharedPrefPluckedTotal = SavedPreference
-                                         .getPluckedTotal(requireContext()) */
-
-                                 // updatePluckTotal(fetchedSharedPrefPluckedTotal, capturedTeaWeight)
-
 
                              } else {
                                  Toast.makeText(context,
@@ -471,6 +484,7 @@ import kotlin.random.Random
          val currentTime = System.currentTimeMillis()
 
          val lastPluckedDate = SavedPreference.getLastDatePlucked(requireContext())
+         val lastTippedDate = SavedPreference.getLastDateTipped(requireContext())
          val sdf = DateFormat.getDateInstance(DateFormat.MEDIUM)
              .format(currentTime)
 
