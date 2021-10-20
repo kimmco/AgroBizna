@@ -49,15 +49,17 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
                 .getPluckedTotal(myContext)
         val fetchedcapturedWeightTotal = SavedPreference
                 .getRecentTeaWeight(myContext)
-       // getTheSavedTotals()
+
         updatePluckTotal(fetchedSharedPrefPluckedTotal, fetchedcapturedWeightTotal!!)
+
+        getTheSavedTotals()
 
     }
 
     private fun getTheSavedTotals() {
-        databaseRef = FirebaseDatabase.getInstance().getReference("totals")
+        val databaseQuery = FirebaseDatabase.getInstance().getReference("totals").limitToLast(1)
 
-        databaseRef.addValueEventListener(object : ValueEventListener{
+        databaseQuery.addValueEventListener(object : ValueEventListener{
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
@@ -72,10 +74,10 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
                         pluckingAddedUp?.let { Log.d("SEE", it) }
 
-                         //SavedPreference.setTipping(myContext, tippingAddedUp!!)
-                        pluckingAddedUp?.let { SavedPreference.setPlucking(myContext, it) }
-                       //  SavedPreference.setTeaExpnsTotal(myContext, teaExpensesCumulated!!)
-                        receivedAmntCumulated?.let { SavedPreference.setTotalMoney(myContext, it) }
+                         SavedPreference.setTipping(myContext, tippingAddedUp!!)
+                         pluckingAddedUp?.let { SavedPreference.setPlucking(myContext, it) }
+                         SavedPreference.setTeaExpnsTotal(myContext, teaExpensesCumulated!!)
+                         receivedAmntCumulated?.let { SavedPreference.setTotalMoney(myContext, it) }
 
                     }
 
@@ -84,6 +86,7 @@ class ForegroundWorker(context: Context, parameters: WorkerParameters) :
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
+
             }
         })
 

@@ -28,8 +28,6 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_tea.*
@@ -340,8 +338,9 @@ import kotlin.random.Random
                                  SavedPreference.setRecentPluckedTeaWeight(
                                          requireContext(), capturedTeaWeight)
 
+                                 val lastPluckedDateOn = sdf.substring(4, 6)
                                  SavedPreference.setRecentPluckedTeaDate(
-                                         requireContext(), sdf)
+                                         requireContext(), lastPluckedDateOn)
 
                                  //todayDayOfMonth)
                                  measure_edtx.setText(" ")
@@ -470,22 +469,29 @@ import kotlin.random.Random
      fun resetMonth(rootLayout: View) {
          val random = (0..1000000).random()
          val currentTime = System.currentTimeMillis()
-         val lastPluckedOn = SavedPreference.getLastDatePlucked(requireContext())
+
+         val lastPluckedDate = SavedPreference.getLastDatePlucked(requireContext())
          val sdf = DateFormat.getDateInstance(DateFormat.MEDIUM)
              .format(currentTime)
+
          val todayDayOfMonth = sdf.substring(4, 6)
-         if(todayDayOfMonth == "01"){
-              Snackbar.make(
+        // val lastPluckedDateOn = lastPluckedDate?.substring(4, 6)
+         Log.d("lastDate", lastPluckedDate.toString())
+         if( todayDayOfMonth == "01"){
+             if(lastPluckedDate == "01") {
+                 return
+             }else{
+                 /* Snackbar.make(
                 // rootLayout.findViewById(R.id.tea_layout),
                   requireActivity().findViewById(android.R.id.content),
                  " For today, add all tea receipts if there are more than one before saving to database",
-                 10000).show()
+                 10000).show()  */
 
+                 SavedPreference.setPlucking(requireContext(), "0")
+                 val savePluckNode = "MleYeMBBeTotals" + random
+                 SavedPreference.setPluckingAccumNode(requireContext(), savePluckNode)
 
-            SavedPreference.setPlucking(requireContext(), "0")
-             val savePluckNode = "MleYeMBBeTotals" + random
-             SavedPreference.setPluckingAccumNode(requireContext(), savePluckNode)
-
+             }
          }
 
      }

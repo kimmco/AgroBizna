@@ -61,7 +61,7 @@ object SavedPreference {
     fun setTipping(context: Context, weight:String){
         editor(
                 context,
-                TIPPED_AMOUNT,
+                `TIPPED_AMOUNT`,
                 weight
         )
     }
@@ -124,9 +124,16 @@ object SavedPreference {
         context
     )?.getString(PLUCKING_ACCUM_NODE,"MleYeMBBeTotals")
 
+
     fun getPluckedTotal(context: Context) = getSharedPreference(
             context
     )?.getString(PLUCKED_AMOUNT, "0.0f")
+
+
+    fun getTippedTotal(context: Context) = getSharedPreference(
+            context
+    )?.getString(TIPPED_AMOUNT, "0.0f")
+
 
     fun getRecentTeaWeight(context: Context) = getSharedPreference(
             context
